@@ -1,4 +1,5 @@
-﻿using SITAzure.Common;
+﻿using Serilog;
+using SITAzure.Common;
 using SITAzure.DAL;
 /***
 *
@@ -21,6 +22,7 @@ namespace SITAzure.DAO
         #region [ CLASS FIELDS ]
 
         private string _connectionString;
+        private ILogger _logger;
 
         #endregion
 
@@ -31,9 +33,10 @@ namespace SITAzure.DAO
             _connectionString = String.Empty;
         }
 
-        public MultiDataRepositoryManager(string connectionString)
+        public MultiDataRepositoryManager(string connectionString, ILogger logger)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         #endregion
@@ -48,7 +51,7 @@ namespace SITAzure.DAO
         {
             List<GasPurchaseDataVO> gasPurchaseDataList = null;
             GasPurchaseDataRepository gasPurchaseDataRepo =
-                                        new GasPurchaseDataRepository(this._connectionString);
+                                        new GasPurchaseDataRepository(this._connectionString, this._logger);
 
             IReadOnlyList<GasPurchaseDataModel> dbRecs = await gasPurchaseDataRepo.GetReadOnlyListExecStoredProcAsync("spSelGasPurchaseDataByUserId",
                                                                                                                     new { intUserId = userId });
@@ -75,7 +78,7 @@ namespace SITAzure.DAO
         public virtual async Task<int> UpdateUserPasswordAsync(int userId, string newPassword)
         {
             int rowsAffectedCnt = 0;
-            SITUserRepository userRepo = new SITUserRepository(this._connectionString);
+            SITUserRepository userRepo = new SITUserRepository(this._connectionString, this._logger);
 
             rowsAffectedCnt = await userRepo.UpdateEntityExecStoredProcAsync("spUpdUserPassword",
                                                                                 new
@@ -90,7 +93,7 @@ namespace SITAzure.DAO
         public virtual async Task<int> InsertGasPurchaseDataAsync(GasPurchaseDataVO gasPurchaseDataVO)
         {
             int rowsAffectedCnt = 0;
-            GasPurchaseDataRepository gasPurchaseDataRepo = new GasPurchaseDataRepository(this._connectionString);
+            GasPurchaseDataRepository gasPurchaseDataRepo = new GasPurchaseDataRepository(this._connectionString, this._logger);
 
             rowsAffectedCnt = await gasPurchaseDataRepo.InsertEntityExecStoredProcAsync("spInsGasPurchaseData",
                                                                                         new
@@ -111,7 +114,7 @@ namespace SITAzure.DAO
         {
             int rowsAffected = 0;
             GasPurchaseDataRepository gasPurchaseDataRepo =
-                                                new GasPurchaseDataRepository(this._connectionString);
+                                                new GasPurchaseDataRepository(this._connectionString, this._logger);
 
             rowsAffected = await gasPurchaseDataRepo.DeleteEntityExecStoredProcAsync("spDelDeleteGasPurchaseDataRecord",
                                                                                         new
@@ -125,7 +128,7 @@ namespace SITAzure.DAO
         public virtual async Task<int> GetMaxGasPurchaseIdAsync()
         {
             int maxGasPurchaseId = 0;
-            GasPurchaseDataRepository gasPurchaseDataRepo = new GasPurchaseDataRepository(this._connectionString);
+            GasPurchaseDataRepository gasPurchaseDataRepo = new GasPurchaseDataRepository(this._connectionString, this._logger);
 
             maxGasPurchaseId = await gasPurchaseDataRepo.ExecScalarGetIntResultStoredProcAsync("spSelScalarMaxGasPurchaseDataId");
 
@@ -135,7 +138,7 @@ namespace SITAzure.DAO
         public virtual async Task<int> GetCountOfGasPurchaseDataRecordsAsync()
         {
             int totalGasPurchaseDataRecs = 0;
-            GasPurchaseDataRepository gasPurchDataRepo = new GasPurchaseDataRepository(this._connectionString);
+            GasPurchaseDataRepository gasPurchDataRepo = new GasPurchaseDataRepository(this._connectionString, this._logger);
 
             totalGasPurchaseDataRecs = await gasPurchDataRepo.ExecScalarGetIntResultStoredProcAsync("spSelCountGasPurchaseData");
             return totalGasPurchaseDataRecs;
@@ -144,7 +147,7 @@ namespace SITAzure.DAO
         public virtual async Task<IReadOnlyList<CarVO>> GetActiveCarsByUserIdAsync(int userId)
         {
             List<CarVO> carVOs = null;
-            CarRepository carRepo = new CarRepository(this._connectionString);
+            CarRepository carRepo = new CarRepository(this._connectionString, this._logger);
 
             var carModels = await carRepo.GetReadOnlyListExecStoredProcAsync("spSelCarsByUserId", new { UserId = userId, IsActive = true });
 
@@ -163,7 +166,7 @@ namespace SITAzure.DAO
         public virtual async Task<IReadOnlyList<GasTypeVO>> GetGasTypeVOsAsync()
         {
             List<GasTypeVO> gasTypes = null;
-            GasTypeRepository gasTypeRepo = new GasTypeRepository(this._connectionString);
+            GasTypeRepository gasTypeRepo = new GasTypeRepository(this._connectionString, this._logger);
             var GasTypeModels = await gasTypeRepo.GetReadOnlyListExecStoredProcAsync("spSelGasolineTypes");
 
             if (GasTypeModels?.Count > 0)
@@ -180,7 +183,7 @@ namespace SITAzure.DAO
         public virtual async Task<VehicleCommentVO> GetVehicleCommentByUserIdAndCommentIdAsync(int userId, int commentId)
         {
             VehicleCommentVO commentVO = null;
-            VehicleCommentRepository vehicleCommentRepo = new VehicleCommentRepository(this._connectionString);
+            VehicleCommentRepository vehicleCommentRepo = new VehicleCommentRepository(this._connectionString, this._logger);
 
             var vehicleCommentModel = await vehicleCommentRepo.GetEntityExecStoredProcAsync("spSelVehicleCommentById",
                                                                                             new
@@ -205,7 +208,7 @@ namespace SITAzure.DAO
         public virtual async Task<int> InsertVehicleCommentAsync(InsVehicleCommentVO vehicleCommentVO)
         {
             int insertRecCnt = 0;
-            VehicleCommentRepository vehicleCommentRepo = new VehicleCommentRepository(this._connectionString);
+            VehicleCommentRepository vehicleCommentRepo = new VehicleCommentRepository(this._connectionString, this._logger);
 
             insertRecCnt = await vehicleCommentRepo.InsertEntityGetIdentityExecStoredProcAsync("spInsVehicleComment",
                                                                                         new

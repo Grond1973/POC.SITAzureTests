@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,6 +26,7 @@ namespace SITAzure.DAL
         #region [ CLASS FIELDS ]
 
         protected string _connectionString;
+        protected ILogger _logger;
 
         #endregion
 
@@ -35,9 +37,10 @@ namespace SITAzure.DAL
             this._connectionString = String.Empty;
         }
 
-        public SITRepositoryBase(string connectionString)
+        public SITRepositoryBase(string connectionString, ILogger logger)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         #endregion

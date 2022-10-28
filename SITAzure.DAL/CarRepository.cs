@@ -12,6 +12,8 @@
 *	@notes: 
 *	
 */
+using Serilog;
+
 namespace SITAzure.DAL
 {
     public class CarRepository : SITRepositoryBase<CarDataModel>
@@ -22,7 +24,7 @@ namespace SITAzure.DAL
 
         #region [ CONSTRUCTOR ]
 
-        public CarRepository(string connectionString) : base(connectionString) {}
+        public CarRepository(string connectionString, ILogger logger) : base(connectionString, logger) {}
 
         #endregion
 

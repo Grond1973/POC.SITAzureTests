@@ -1,4 +1,5 @@
-﻿using SITAzure.Common;
+﻿using Serilog;
+using SITAzure.Common;
 /***
 *
 *	@author: Lawrence F. F. Sullivan
@@ -23,7 +24,7 @@ namespace SITAzure.DAL
 
         #region [ CONSTRUCTOR ]
 
-        public SITUserRepository(string connectionString) : base(connectionString) { }
+        public SITUserRepository(string connectionString, ILogger logger) : base(connectionString, logger) { }
 
         #endregion
 

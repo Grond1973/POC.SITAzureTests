@@ -12,6 +12,8 @@
 *	@notes: 
 *	
 */
+using Serilog;
+
 namespace SITAzure.DAL
 {
     public class GasPurchaseDataRepository :  SITRepositoryBase<GasPurchaseDataModel> 
@@ -22,7 +24,7 @@ namespace SITAzure.DAL
 
         #region [ CONSTRUCTOR ]
 
-        public GasPurchaseDataRepository(string connectionString) : base(connectionString) {}
+        public GasPurchaseDataRepository(string connectionString, ILogger logger) : base(connectionString, logger) {}
 
         #endregion
 

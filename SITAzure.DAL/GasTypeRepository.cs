@@ -1,4 +1,6 @@
-﻿namespace SITAzure.DAL
+﻿using Serilog;
+
+namespace SITAzure.DAL
 {
     public class GasTypeRepository : SITRepositoryBase<GasTypeModel>
     {
@@ -8,7 +10,7 @@
 
         #region [ CONSTRUCTOR ]
 
-        public GasTypeRepository(string connectionString) : base(connectionString) {}
+        public GasTypeRepository(string connectionString, ILogger logger) : base(connectionString, logger) {}
 
         #endregion
 

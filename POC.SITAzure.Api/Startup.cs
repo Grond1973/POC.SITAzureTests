@@ -59,7 +59,7 @@ namespace POC.SITAzure.Api
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                                            .Where(asm => asm.Name.ToLower().EndsWith("controller"))
                                            .EnableClassInterceptors()
-                                           .InterceptedBy(typeof(ApiControllerInterceptor))/**/;
+                                           .InterceptedBy(typeof(ApiControllerInterceptor));
 
             /***
              * Add DAL
@@ -69,7 +69,7 @@ namespace POC.SITAzure.Api
                 var gnrtr = new ProxyGenerator();
                 return gnrtr.CreateInterfaceProxyWithTargetInterface<IRepositoryOperations>
                 (
-                    new MultiDataRepositoryManager(connInfo),
+                    new MultiDataRepositoryManager(connInfo, Log.Logger),
                     new SITAsyncInterceptor(Log.Logger, "An exception was thrown in the data access layer. Please check the logs.")
                 );
             })
