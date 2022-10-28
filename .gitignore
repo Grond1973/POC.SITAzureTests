@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # appsettings.*.json - no Dev/QA/UAT files
 appsettings.*.json
+appsettings.Development.json
