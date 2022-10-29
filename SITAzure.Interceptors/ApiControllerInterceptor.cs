@@ -1,6 +1,7 @@
 ﻿using Castle.DynamicProxy;
+using HIM4DotNet5.Common;
 using Serilog;
-/**
+/***
 *
 *	@author: Lawrence F. Sullivan
 *
@@ -58,7 +59,7 @@ namespace SITAzure.Interceptors
             {
                 Guid guid = this.GenerateExceptionId();
                 this._logger.Error(ex, EX_MSG);
-                //throw new SITInternalAppException(guid, AppLayer.WEB_API, EX_MSG);
+                throw new SITInternalAppException(guid, AppLayer.WEB_API, EX_MSG);
                 throw new Exception(EX_MSG);
             }
         }

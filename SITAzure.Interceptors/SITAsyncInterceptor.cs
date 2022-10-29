@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using HIM4DotNet5.Common;
 using Serilog;
 /***
 *
@@ -20,15 +21,18 @@ namespace SITAzure.Interceptors
         #region [ CLASS FIELDS ]
 
         private ILogger _logger;
-        private string _environmentTag;
+        private string _exMsg;
+        private AppLayer _appEnum;
         #endregion
 
         #region [ CONSTRUCTOR ]
 
-        public SITAsyncInterceptor(ILogger logger, string environmentTag)
+        public SITAsyncInterceptor(ILogger logger, AppLayer appEnum, string exMsg)
         {
             _logger = logger;
-            _environmentTag = environmentTag;
+            _appEnum = appEnum;
+            _exMsg = exMsg;
+            _logger.Debug("IN AsyncInterceptor ctor()...");
         }
 
         #endregion
@@ -71,9 +75,10 @@ namespace SITAzure.Interceptors
             }
             catch (Exception ex)
             {
-                Guid guid = Guid.NewGuid();
-                this._logger.Error(ex, _environmentTag);
-                throw new Exception(_environmentTag);
+                Guid guid = this.GenerateExceptionId();
+                this._logger.Error("Exception ID: {GUID}", guid.ToString());
+                this._logger.Error(ex.ToString());
+                throw new SITInternalAppException(guid, this._appEnum, this._exMsg);
             }
         }
 
@@ -99,9 +104,10 @@ namespace SITAzure.Interceptors
             }
             catch (Exception ex)
             {
-                Guid guid = Guid.NewGuid();
-                this._logger.Error(ex, _environmentTag);
-                throw new Exception(_environmentTag);
+                Guid guid = this.GenerateExceptionId();
+                this._logger.Error("Exception ID: {GUID}", this.GenerateExceptionId().ToString());
+                this._logger.Error(ex.ToString());
+                throw new SITInternalAppException(guid, this._appEnum, this._exMsg);
             }
         }
 
@@ -129,13 +135,16 @@ namespace SITAzure.Interceptors
             }
             catch (Exception ex)
             {
-                Guid guid = Guid.NewGuid();
-                this._logger.Error(ex, _environmentTag);
-                throw new Exception(_environmentTag);
+                Guid guid = this.GenerateExceptionId();
+                this._logger.Error("Exception ID: {GUID}", guid.ToString());
+                this._logger.Error(ex.ToString());
+                throw new SITInternalAppException(guid, this._appEnum, this._exMsg);
             }
 
             return result;
         }
+
+        protected Guid GenerateExceptionId() { return Guid.NewGuid(); }
 
         #endregion
 

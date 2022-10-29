@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using SITAzure.DAO;
 using SITAzure.Interceptors;
+using HIM4DotNet5.Common;
 
 namespace POC.SITAzure.Api
 {
@@ -70,7 +71,8 @@ namespace POC.SITAzure.Api
                 return gnrtr.CreateInterfaceProxyWithTargetInterface<IRepositoryOperations>
                 (
                     new MultiDataRepositoryManager(connInfo, Log.Logger),
-                    new SITAsyncInterceptor(Log.Logger, "An exception was thrown in the data access layer. Please check the logs.")
+                    new SITAsyncInterceptor(Log.Logger, AppLayer.DATA_ACCESS_LAYER, 
+                                            "An exception was thrown in the data access layer. Please check the logs.")
                 );
             })
             .AsSelf()

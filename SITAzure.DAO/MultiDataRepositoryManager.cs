@@ -225,7 +225,7 @@ namespace SITAzure.DAO
         public virtual async Task<IReadOnlyList<int>> GetVehicleCommentYearListAsync(int userId)
         {
             List<int> years = null;
-            VehicleCommentYearListRepository yearListRepo = new VehicleCommentYearListRepository(this._connectionString,
+            VehicleCommentRepository yearListRepo = new VehicleCommentRepository(this._connectionString,
                                                                                                   this._logger);
 
             var dbYearRecs = await yearListRepo.ExecStoredProcGetListofInt("spSelVehicleCommentYearList",
