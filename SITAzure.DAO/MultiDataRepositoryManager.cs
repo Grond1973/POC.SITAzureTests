@@ -222,6 +222,25 @@ namespace SITAzure.DAO
             return insertRecCnt;
         }
 
+        public virtual async Task<IReadOnlyList<int>> GetVehicleCommentYearListAsync(int userId)
+        {
+            List<int> years = null;
+            VehicleCommentYearListRepository yearListRepo = new VehicleCommentYearListRepository(this._connectionString,
+                                                                                                  this._logger);
+
+            var dbYearRecs = await yearListRepo.ExecStoredProcGetListofInt("spSelVehicleCommentYearList",
+                                                                            new { intUserId = userId });
+
+            if(dbYearRecs?.Count > 0)
+            {
+                years = new List<int>();
+                foreach(var rec in dbYearRecs)
+                { years.Add(rec); }
+            }
+
+            return years?.AsReadOnly();
+        }
+
         #endregion
     }
 }

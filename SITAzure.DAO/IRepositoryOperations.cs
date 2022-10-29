@@ -37,5 +37,7 @@ namespace SITAzure.DAO
 
         Task<int> InsertVehicleCommentAsync(InsVehicleCommentVO vehicleCommentVO);
 
+        Task<IReadOnlyList<int>> GetVehicleCommentYearListAsync(int userId);
+
     }
 }

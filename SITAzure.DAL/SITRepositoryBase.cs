@@ -227,6 +227,44 @@ namespace SITAzure.DAL
             return identityId;
         }
 
+        public virtual async Task<IReadOnlyList<int>> ExecStoredProcGetListofInt(string storedProcName, object parameters = null)
+        {
+            List<int> ints = null;
+            IDbConnection sqlConn = null;
+            IEnumerable<int> entities = null;
+            try
+            {
+                sqlConn= this._createConnection();
+                sqlConn?.Open();
+
+                if(parameters != null)
+                {
+                    entities = await sqlConn.QueryAsync<int>(sql: storedProcName, parameters,
+                                                                    commandType: CommandType.StoredProcedure)
+                                                .ConfigureAwait(false);
+                }
+                else
+                {
+                    entities = await sqlConn.QueryAsync<int>(sql: storedProcName, null,
+                                                                    commandType: CommandType.StoredProcedure)
+                                                .ConfigureAwait(false);
+                }
+
+                if(entities != null)
+                {   ints = new List<int>(entities); }
+                
+            }
+            catch(Exception ex)
+            {
+                this._logger.Error(ex.ToString());
+                throw;
+            }
+            finally
+            { sqlConn?.Dispose(); }
+
+            return ints.AsReadOnly();
+        }
+
         #endregion
     }
 }

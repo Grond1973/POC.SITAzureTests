@@ -28,6 +28,8 @@ namespace SITAzure.DAL
         Task<int> DeleteEntityExecStoredProcAsync(string storedProcName, object parameters);
 
         Task<int> ExecScalarGetIntResultStoredProcAsync(string storedProcName, object parameters=null);
+
+        Task<IReadOnlyList<int>> ExecStoredProcGetListofInt(string storedProcName, object parameters = null);
         
     }
 }

@@ -91,6 +91,28 @@ namespace SITAzure.Controllers
             return actionResult;
         }
 
+        [HttpGet("GetYearList/{userId}")]
+        public virtual async Task<ActionResult<IEnumerable<int>>> GetDistinctYearList([FromRoute] int userId)
+        {
+            ActionResult actionResult = null;
+            IReadOnlyList<int> years = null;
+
+            try
+            {
+                years = await this._multiRepositoryManager.GetVehicleCommentYearListAsync(userId);
+
+                if(years?.Count > 0)
+                { actionResult = new OkObjectResult(years); }
+                else
+                { actionResult = new NotFoundResult(); }
+            }
+            catch (Exception ex)
+            { actionResult = StatusCode(StatusCodes.Status500InternalServerError, ex.Message); }
+
+
+            return actionResult;
+        }
+
         #endregion
 
     }
